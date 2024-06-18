@@ -93,6 +93,7 @@ class Linear(nn.Module, GLoraLayer):
         GLoraLayer.__init__(self, base_layer=base_layer, in_features=in_features, out_features=out_features, r=r, adapter_name=adapter_name)
         self.fan_in_fan_out = fan_in_fan_out
         self.weight.requires_grad = False
+
         # Freezing the pre-trained weight matrix
         nn.Linear.reset_parameters(self)
         self._active_adapter = adapter_name
