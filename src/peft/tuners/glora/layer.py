@@ -27,8 +27,8 @@ def mark_only_glora_as_trainable(model: nn.Module) -> None:
 
 
 class GLoraLayer(BaseTunerLayer):
-    def __init__(self, in_features: int, out_features: int, r: int, adapter_name: str, **kwargs):
-        base_layer = self.get_base_layer()
+    def __init__(self, base_layer: nn.Module, in_features: int, out_features: int, r: int, adapter_name: str, **kwargs):
+        self.base_layer = base_layer
 
         if isinstance(base_layer, nn.Linear):
             in_features, out_features = base_layer.in_features, base_layer.out_features
@@ -81,21 +81,21 @@ class Linear(nn.Module, GLoraLayer):
     # GLora implemented in a dense layer
     def __init__(
         self,
+        base_layer,
         adapter_name: str,
         in_features: int,
         out_features: int,
+        fan_in_fan_out: bool = False,
         r: int = 0,
         **kwargs,
     )-> None:
-        kwargs.pop('fan_in_fan_out')
-        nn.Module.__init__(self=self, **kwargs)
-        GLoraLayer.__init__(self, in_features=in_features, out_features=out_features, r=r, adapter_name=adapter_name)
-
-        # Freezing the pre-trained weight matrix
+        super().__init__()
+        GLoraLayer.__init__(self, base_layer=base_layer, in_features=in_features, out_features=out_features, r=r, adapter_name=adapter_name)
+        self.fan_in_fan_out = fan_in_fan_out
         self.weight.requires_grad = False
-
+        # Freezing the pre-trained weight matrix
         nn.Linear.reset_parameters(self)
-        self.active_adapter = adapter_name
+        self._active_adapter = adapter_name
         self.to(self.weight.device)
 
     def merge(self):
