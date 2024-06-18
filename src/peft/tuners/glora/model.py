@@ -444,7 +444,7 @@ def dispatch_default_glora(
     **kwargs,
 ) -> Optional[torch.nn.Module]:
     new_module = None
-    kwargs["fan_in_fan_out"] = False
+    #kwargs["fan_in_fan_out"] = False
     if isinstance(target, BaseTunerLayer):
         target_base_layer = target.get_base_layer()
     else:
@@ -472,14 +472,3 @@ def dispatch_default_glora(
         new_module = Linear(target, adapter_name, target.in_features, target.out_features, **kwargs)
 
     return new_module
-
-# @staticmethod
-# def dispatch_default(qlora_config, adapter_name, target, **kwargs):
-#     new_module = None
-#     if isinstance(target, BaseTunerLayer):
-#         target_base_layer = target.get_base_layer()
-#     else:
-#         target_base_layer = target
-#     if isinstance(target_base_layer, torch.nn.Linear):
-#         new_module = Linear(adapter_name, target.in_features, target.out_features, **kwargs)
-#     return new_module

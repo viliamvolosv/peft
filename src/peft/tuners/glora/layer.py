@@ -8,6 +8,7 @@ import torch.nn.functional as F
 
 from peft.tuners.tuners_utils import BaseTunerLayer
 
+
 random.seed(56)
 
 
@@ -93,11 +94,14 @@ class Linear(nn.Module, GLoraLayer):
         GLoraLayer.__init__(self, base_layer=base_layer, in_features=in_features, out_features=out_features, r=r, adapter_name=adapter_name)
         self.fan_in_fan_out = fan_in_fan_out
         self.weight.requires_grad = False
-
-        # Freezing the pre-trained weight matrix
-        nn.Linear.reset_parameters(self)
         self._active_adapter = adapter_name
         self.to(self.weight.device)
+
+        for layer in nn.Module.children(self):
+            if hasattr(layer, 'reset_parameters'):
+                layer.reset_parameters()
+
+
 
     def merge(self):
         if self.merged:
