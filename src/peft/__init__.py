@@ -82,7 +82,9 @@ from .tuners import (
     VeraConfig,
     VeraModel,
     GLoraConfig,
-    GLoraModel
+    GLoraModel,
+    ReLoRaConfig,
+    ReLoRaModel
 )
 from .utils import (
     TRANSFORMERS_MODELS_TO_PREFIX_TUNING_POSTPROCESS_MAPPING,
