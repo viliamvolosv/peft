@@ -58,8 +58,6 @@ from .tuners import (
     VeraModel,
     GLoraModel,
     GLoraConfig,
-    ReLoraConfig,
-    ReLoraModel,
 )
 from .tuners.tuners_utils import BaseTuner as _BaseTuner
 from .utils import _prepare_prompt_learning_config
@@ -95,7 +93,6 @@ PEFT_TYPE_TO_CONFIG_MAPPING: dict[str, type[PeftConfig]] = {
     "LN_TUNING": LNTuningConfig,
     "VERA": VeraConfig,
     "GLORA": GLoraConfig,
-    "RELORA": ReLoraConfig,
 }
 
 PEFT_TYPE_TO_TUNER_MAPPING: dict[str, type[_BaseTuner]] = {
@@ -110,7 +107,6 @@ PEFT_TYPE_TO_TUNER_MAPPING: dict[str, type[_BaseTuner]] = {
     "LN_TUNING": LNTuningModel,
     "VERA": VeraModel,
     "GLORA": GLoraModel,
-    "RELORA": ReLoraModel,
 }
 
 

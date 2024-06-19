@@ -178,8 +178,6 @@ def get_peft_model_state_dict(
             to_return["base_model.vera_B." + adapter_name] = state_dict["base_model.vera_B." + adapter_name]
     elif config.peft_type == PeftType.GLORA:
         to_return = {k: state_dict[k] for k in state_dict if "glora_" in k}
-    elif config.peft_type == PeftType.RELORA:
-        to_return = {k: state_dict[k] for k in state_dict if "relora_" in k}
 
     else:
         raise ValueError(f"Unknown PEFT type passed: {config.peft_type}")
@@ -318,8 +316,7 @@ def set_peft_model_state_dict(
         PeftType.LN_TUNING,
         PeftType.BOFT,
         PeftType.VERA,
-        PeftType.GLORA,
-        PeftType.RELORA,
+        PeftType.GLORA
     ):
         peft_model_state_dict = {}
         parameter_prefix = {
@@ -334,7 +331,6 @@ def set_peft_model_state_dict(
             PeftType.LN_TUNING: "ln_tuning_",
             PeftType.VERA: "vera_lambda_",
             PeftType.GLORA: "glora_",
-            PeftType.RELORA: "relora_",
         }[config.peft_type]
         for k, v in state_dict.items():
             if parameter_prefix in k:
@@ -383,9 +379,8 @@ def set_peft_model_state_dict(
 
     elif config.is_prompt_learning or config.peft_type == PeftType.ADAPTION_PROMPT:
         peft_model_state_dict = state_dict
+        
     elif config.peft_type == PeftType.GLORA:
-        peft_model_state_dict = state_dict
-    elif config.peft_type == PeftType.RELORA:
         peft_model_state_dict = state_dict
     else:
         raise NotImplementedError
